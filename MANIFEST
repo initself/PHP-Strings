@@ -1,0 +1,25 @@
+Artistic
+Changes
+const-c.inc
+const-xs.inc
+COPYING
+fallback/const-c.inc
+fallback/const-xs.inc
+INSTALL
+lib/PHP/Strings.pm
+LICENCE
+Makefile.PL
+MANIFEST
+MANIFEST.SKIP
+META.yml			Module meta-data (added by MakeMaker)
+ppport.h
+README
+Strings.xs
+t/99pod.t
+t/addcslashes.t
+t/addslashes.t
+t/bin2hex.t
+t/chunk_split.t
+t/count_chars.t
+t/money_format.t
+t/str_pad.t
