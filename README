@@ -8,8 +8,20 @@ For usage, see the doco. Either use perldoc or view it
 on the web at:
     <http://search.cpan.org/dist/PHP-Strings/>
 
-Changes for 0.01 (14 Nov 2003)
-  - Initial release
+Changes for 0.27 (12 Dec 2003)
+   - Added substr_compare substr_count substr substr_replace
+   - Added trim ucfrist ucwords vprintf vsprintf wordwrap
+   - Added strtr
+   - Add strtolower strtoupper crc32
+   - Added tests and docs and changed implementation for
+     str_word_count
+   - Include synopses in function docs
+   - Include build stuff in the dist
+   - Format multiline synopses properly
+   - Improved makepm argument handling.
+   - List AutoInstall featureset for PHP::Strings dev.
+   - Optional modules featureset for PHP::Strings
+     development.
 
 
 For a complete list of changes, see the Changes file.

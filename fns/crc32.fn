@@ -1,2 +1,2 @@
-docs: TBD
-code: sub crc32 { croak "TBD" }
+docs: |
+    See the L<String::CRC32> module.

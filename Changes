@@ -1,5 +1,23 @@
 
 ---
+version: 0.27
+date:    12 Dec 2003
+changes:
+    - Added substr_compare substr_count substr substr_replace
+    - Added trim ucfrist ucwords vprintf vsprintf wordwrap
+    - Added strtr
+    - Add strtolower strtoupper crc32
+    - Added tests and docs and changed implementation for str_word_count
+
+    - Include synopses in function docs
+    - Include build stuff in the dist
+    - Format multiline synopses properly
+
+    - Improved makepm argument handling.
+    - List AutoInstall featureset for PHP::Strings dev.
+    - Optional modules featureset for PHP::Strings development.
+
+---
 version: 0.26
 date:    10 Dec 2003
 changes:

@@ -7,9 +7,14 @@ version_from  ('Strings.pm');
 abstract      ("Implement some of PHP's functions");
 author        ('Iain Truskett (spoon@cpan.org)');
 
-requires( 'Test::More'       => '0.45' );
 requires( 'Params::Validate' => '0.70' );
 requires( 'Scalar::Util'     => '1.13' );
+
+for my $mod (qw( Test::More File::Slurp Test::Differences ))
+{
+    include_deps( $mod, 5.006 );
+}
+
 
 features (
      "Function `str_shuffle'" => [
@@ -19,6 +24,14 @@ features (
         'HTML::Entities' => '1.27',
         'HTML::Scrubber' => '0.06',
      ],
+);
+features (
+    "PHP::Strings Development" => [
+        -default => 0,
+        'YAML'        => '0.35',
+        'Template'    => '2.10',
+        'B::Keywords' => '0.06',
+    ],
 );
 
 auto_install();

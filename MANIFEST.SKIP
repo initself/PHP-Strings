@@ -17,4 +17,3 @@
 ^log$
 ^data\.yaml$
 ^blibdirs$
-\.(o|c|bs)$

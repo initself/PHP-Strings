@@ -3,7 +3,7 @@ package PHP::Strings;
 # vim: ft=perl
 use strict;
 use warnings FATAL => 'all';
-our $VERSION = '0.26';
+our $VERSION = '0.27';
 
 =head1 NAME
 
@@ -11,10 +11,10 @@ PHP::Strings - Implement some of PHP's string functions.
 
 =head1 SYNOPSIS
 
-   use PHP::Strings;
+    use PHP::Strings;
 
 [% FOR syn = synopses -%]
-   [% syn %]
+[% syn %]
 [% END %]
 
 =head1 DESCRIPTION
@@ -190,6 +190,8 @@ EODEATH
 B<PHP::Strings::[% fn %] WILL NOT BE IMPLEMENTED>.
 
 [%- END -%]
+
+[% d.synopsis -%]
 
 [% d.docs %]
 

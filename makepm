@@ -4,8 +4,15 @@ use warnings FATAL => 'all';
 use YAML qw( LoadFile Dump );
 use Template;
 use B::Keywords;
+use Getopt::Long;
 
-my $debug = @ARGV ? 1 : 0;
+GetOptions(
+    'debug' => \my $debug,
+    'nomake' => \my $do_makefile,
+);
+
+$_ = $_ ? 1 : 0 for $debug;
+$_ = $_ ? 0 : 1 for $do_makefile;
 
 sub load_fns
 {
@@ -31,6 +38,8 @@ sub inject
     my @values = @{$data}{sort keys %$data};
 
     chomp( my @synopses = grep defined, map { $_->{synopsis} } @values );
+    s/^/    /mg for @synopses;
+    defined $_->{synopsis} and $_->{synopsis} =~ s/^/    /mg for @values;
     my %requirements = map { %$_ } grep defined, map { $_->{requirements} } @values;
 
     my @autoinstall;
@@ -58,6 +67,7 @@ sub inject
     my $tt = Template->new() or die $Template::ERROR;
     return sub {
         my ($in, $out) = @_;
+        warn "Formatting $in...\n";
         $tt->process( $in, $injection, $out ) or die $tt->error();
     };
 }
@@ -66,5 +76,5 @@ sub inject
     my $fns = load_fns();
     my $formatter = inject( $fns );
     $formatter->( 'Strings.tt', 'Strings.pm' );
-    $formatter->( 'Makefile.tt', 'Makefile.PL' );
+    $formatter->( 'Makefile.tt', 'Makefile.PL' ) if $do_makefile;
 }

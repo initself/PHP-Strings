@@ -1,11 +1,10 @@
 name: PHP-Strings
-version: 0.26
+version: 0.27
 abstract: Implement some of PHP's functions
 author: Iain Truskett (spoon@cpan.org)
 license: unknown
 distribution_type: module
 requires:
-  Test::More: 0.45
   Params::Validate: 0.70
   Scalar::Util: 1.13
 no_index:

@@ -1,0 +1,8 @@
+CREDITS FOR PHP::Strings 0.27
+
+Juerd Waalboer (JUERD) for suggesting a link, and the assorted regex
+functions.
+
+Matthew Persico (PERSICOM) for the idea of having the
+functions give their documentation as their error.
+

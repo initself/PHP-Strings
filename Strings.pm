@@ -3,7 +3,7 @@ package PHP::Strings;
 # vim: ft=perl
 use strict;
 use warnings FATAL => 'all';
-our $VERSION = '0.26';
+our $VERSION = '0.27';
 
 =head1 NAME
 
@@ -11,11 +11,14 @@ PHP::Strings - Implement some of PHP's string functions.
 
 =head1 SYNOPSIS
 
-   use PHP::Strings;
+    use PHP::Strings;
 
-   my $slashed = addcslashes( $not_escaped, $charlist );
-   my $clean = strip_tags( $html, '<a><b><i><u>' );
-   my $unslashed = stripcslashes( '\a\b\f\n\r\xae' );
+    my $slashed = addcslashes( $not_escaped, $charlist );
+    my $wordcount = str_word_count( $string );
+    my @words     = str_word_count( $string, 1 );
+    my %positions = str_word_count( $string, 2 );
+    my $clean = strip_tags( $html, '<a><b><i><u>' );
+    my $unslashed = stripcslashes( '\a\b\f\n\r\xae' );
 
 
 =head1 DESCRIPTION
@@ -164,6 +167,8 @@ L<Exporter/"Specialised Import Lists">.
 L<http://www.php.net/addcslashes>
 
 
+    my $slashed = addcslashes( $not_escaped, $charlist );
+
 Returns a string with backslashes before characters that are listed
 in C<$charlist>.
 
@@ -280,6 +285,7 @@ L<http://www.php.net/chop>
 
 B<PHP::Strings::chop WILL NOT BE IMPLEMENTED>.
 
+
 PHP's C<chop> function is an alias to its L<"rtrim"> function.
 
 Perl has a builtin named L<chop|perlfunc/"chop">. Thus we do
@@ -298,6 +304,7 @@ L<http://www.php.net/chr>
 
 
 B<PHP::Strings::chr WILL NOT BE IMPLEMENTED>.
+
 
 PHP's and Perl's L<chr|perlfunc/"chr"> functions operate sufficiently
 identically.
@@ -319,6 +326,7 @@ encodings may not necessarily be B<one byte>.
 =head2 chunk_split
 
 L<http://www.php.net/chunk_split>
+
 
 
 Returns the given string, split into smaller chunks.
@@ -390,6 +398,7 @@ BEGIN { push @badeggs, "convert_cyr_string" };
 =head2 count_chars
 
 L<http://www.php.net/count_chars>
+
 
 
 A somewhat daft function that returns counts of characters in a string.
@@ -464,19 +473,26 @@ sub count_chars
 L<http://www.php.net/crc32>
 
 
-TBD
+=cut
+
+sub crc32 {
+    death(<<'EODEATH');
+
+=pod
+
+B<PHP::Strings::crc32 WILL NOT BE IMPLEMENTED>.
+
+See the L<String::CRC32> module.
+
 
 =cut
 
+EODEATH
+}
 
 
 
-BEGIN { $EXPORT_TAGS{crc32} = [ qw(
-    crc32 
-) ] }
-
-#line 0 fns/crc32.fn
-sub crc32 { croak "TBD" }
+BEGIN { push @badeggs, "crc32" };
 
 
 =head2 crypt
@@ -485,6 +501,7 @@ L<http://www.php.net/crypt>
 
 
 B<PHP::Strings::crypt WILL NOT BE IMPLEMENTED>.
+
 
 PHP's crypt is the same as Perl's. Thus there's no need for
 C<PHP::String> to provide an implementation.
@@ -784,6 +801,7 @@ L<http://www.php.net/join>
 
 B<PHP::Strings::join WILL NOT BE IMPLEMENTED>.
 
+
 PHP's C<join> is an alias for C<implode>. See L<"implode">.
 
 
@@ -967,6 +985,7 @@ BEGIN { push @badeggs, "metaphone" };
 L<http://www.php.net/money_format>
 
 
+
 sprintf for money.
 
 =cut
@@ -1061,6 +1080,7 @@ BEGIN { push @badeggs, "nl_langinfo" };
 L<http://www.php.net/number_format>
 
 
+
 TBD
 
 =cut
@@ -1097,6 +1117,7 @@ L<http://www.php.net/ord>
 
 
 B<PHP::Strings::ord WILL NOT BE IMPLEMENTED>.
+
 
 See L<perlfunc/"ord">. Note that Perl returns Unicode value, not ASCII.
 
@@ -1141,6 +1162,7 @@ L<http://www.php.net/print>
 
 B<PHP::Strings::print WILL NOT BE IMPLEMENTED>.
 
+
 See L<perlfunc/"print">.
 
 
@@ -1156,6 +1178,7 @@ L<http://www.php.net/printf>
 
 
 B<PHP::Strings::printf WILL NOT BE IMPLEMENTED>.
+
 
 See L<perlfunc/"printf">.
 
@@ -1200,6 +1223,7 @@ L<http://www.php.net/quotemeta>
 
 
 B<PHP::Strings::quotemeta WILL NOT BE IMPLEMENTED>.
+
 
 See L<perlfunc/"quotemeta">.
 
@@ -1325,6 +1349,7 @@ BEGIN { push @badeggs, "sha1_file" };
 L<http://www.php.net/similar_text>
 
 
+
 TBD
 
 =cut
@@ -1372,6 +1397,7 @@ L<http://www.php.net/sprintf>
 
 
 B<PHP::Strings::sprintf WILL NOT BE IMPLEMENTED>.
+
 
 See L<perlfunc/"sprintf">.
 
@@ -1440,6 +1466,7 @@ BEGIN { push @badeggs, "str_ireplace" };
 =head2 str_pad
 
 L<http://www.php.net/str_pad>
+
 
 
 TBD
@@ -1591,6 +1618,7 @@ BEGIN { push @badeggs, "str_rot13" };
 L<http://www.php.net/str_shuffle>
 
 
+
 Implemented, against my better judgement. It's trivial, like so many of
 the others.
 
@@ -1649,7 +1677,40 @@ BEGIN { push @badeggs, "str_split" };
 L<http://www.php.net/str_word_count>
 
 
-TBD
+    my $wordcount = str_word_count( $string );
+    my @words     = str_word_count( $string, 1 );
+    my %positions = str_word_count( $string, 2 );
+
+With a single argument, returns the number of words in that string.
+Equivalent to:
+
+    my $wordcount = () = $string =~ m/(\S+)/g;
+
+With 2 arguments, where the second is the value C<0>,
+returns the same as with no second argument.
+
+With 2 arguments, where the second is the value C<1>, returns
+each of those words.
+Equivalent to:
+
+    my @words = $string =~ m/(\S+)/g;
+
+With 2 arguments, where the second is the value C<2>,
+returns a hash where the values are the words, and the
+keys are their position in the string (offsets are 0
+based).
+
+If words are duplicated, then they are duplicated.
+The definition of a word is anything that isn't a space.
+When I say I<equivalent> above, I mean that's the exact
+code this function uses.
+
+This function should really be three different
+functions, but as PHP already has over 3000, I
+can only assume they wanted to restrain themselves.
+Implementation wise, it is three different functions.
+I just keep them in an array and dispatch appropriately.
+
 
 =cut
 
@@ -1661,28 +1722,41 @@ BEGIN { $EXPORT_TAGS{str_word_count} = [ qw(
 ) ] }
 
 #line 0 fns/str_word_count.fn
-sub str_word_count
-{
-    my ( $string, $format ) = validate_pos( @_,
-        STRING,
-        {
-            %{+NUMBER_RANGE( 0, 1 )},
-            default => 1,
-        }
-    );
 
-    if ( $format == 1 ) {
-        my @words = $string =~ m/(\S+)/g;
-        return @words;
-    } else {
-        my %words;
-        while ( $string =~ m/(\S+)/g )
-        {
-            $words{ $-[1] } = $1;
-        }
-        return %words;
-    }
-}
+   my @str_word_count = (
+
+       sub { 
+           my $count = () = $_[0] =~ m/(\S+)/g;
+           return $count;
+       },
+
+       sub {
+           my @words = $_[0] =~ m/(\S+)/g;
+           return @words;
+       },
+
+       sub {
+           my %words;
+           while ( $_[0] =~ m/(\S+)/g )
+           {
+               $words{ $-[1] } = $1;
+           }
+           return %words;
+       },
+   );
+
+   sub str_word_count
+   {
+       my ( $string, $format ) = validate_pos( @_,
+           STRING,
+           {
+               %{+NUMBER_RANGE( 0, $#str_word_count )},
+               default => 0,
+           }
+       );
+
+       return $str_word_count[$format]->( $string );
+   }
 
 
 
@@ -1836,6 +1910,7 @@ BEGIN { push @badeggs, "strcspn" };
 L<http://www.php.net/strip_tags>
 
 
+    my $clean = strip_tags( $html, '<a><b><i><u>' );
 You really want L<HTML::Scrubber>.
 
 This function tries to return a string with all HTML
@@ -1895,6 +1970,8 @@ sub strip_tags
 
 L<http://www.php.net/stripcslashes>
 
+
+    my $unslashed = stripcslashes( '\a\b\f\n\r\xae' );
 
 Returns a string with backslashes stripped off. Recognizes
 C-like C<\n>, C<\r> ..., octal and hexadecimal representation.
@@ -2351,6 +2428,423 @@ EODEATH
 
 
 BEGIN { push @badeggs, "strstr" };
+
+
+=head2 strtolower
+
+L<http://www.php.net/strtolower>
+
+
+=cut
+
+sub strtolower {
+    death(<<'EODEATH');
+
+=pod
+
+B<PHP::Strings::strtolower WILL NOT BE IMPLEMENTED>.
+
+See L<perlfunc/"lc">.
+
+
+=cut
+
+EODEATH
+}
+
+
+
+BEGIN { push @badeggs, "strtolower" };
+
+
+=head2 strtoupper
+
+L<http://www.php.net/strtoupper>
+
+
+=cut
+
+sub strtoupper {
+    death(<<'EODEATH');
+
+=pod
+
+B<PHP::Strings::strtoupper WILL NOT BE IMPLEMENTED>.
+
+See L<perlfunc/"uc">.
+
+
+=cut
+
+EODEATH
+}
+
+
+
+BEGIN { push @badeggs, "strtoupper" };
+
+
+=head2 strtr
+
+L<http://www.php.net/strtr>
+
+
+
+This function, like many in PHP, is really two functions.
+
+The first is the same as L<the tr operator|perlop/"tr">.
+And you really should use C<tr> instead of this function.
+
+The second is more complicated.
+
+
+=cut
+
+
+
+
+BEGIN { $EXPORT_TAGS{strtr} = [ qw(
+    strtr 
+) ] }
+
+#line 0 fns/strtr.fn
+sub _make_re_list
+{
+    return qr/@{[ join '|', map quotemeta, @_ ]}/;
+}
+
+sub _strtr_pairs
+{
+    my ( $string, $pairs ) = @_;
+    my @alternates = reverse sort { length $a <=> length $b } keys %$pairs;
+
+    # Exit quickly if we don't need to stay.
+    return $string unless @alternates;
+
+    my $regex = _make_re_list( @alternates );
+
+    $string =~ s/($regex)/$pairs->{$1}/eg;
+    
+    return $string;
+}
+
+sub _strtr_tr
+{
+    my ( $string, $from, $to ) = @_;
+
+    # Exit quickly if we don't need to stay.
+    return $string unless length $from;
+
+    # Ignore excess characters
+    if ( length $from != length $to )
+    {
+        if ( length $to > length $from ) {
+            substr( $to, (length $from) ) = "";
+        } elsif ( length $from > length $to ) {
+            substr( $from, (length $to) ) = "";
+        }
+    }
+
+    eval "\$string =~ tr/$from/$to/, 1" or die $@;
+
+    return $string;
+}
+
+sub strtr
+{
+    my ( $string, $from, $to ) = validate_pos( @_,
+        STRING,
+        STRING|HASHREF,
+        {
+            %{+STRING},
+            optional => 1,
+        },
+    );
+
+    if ( ref $from eq 'HASH' )
+    {
+        if ( not defined $to )
+        {
+            return _strtr_pairs( $string, $from );
+        }
+        else
+        {
+            croak "Parameter #3 to PHP::Strings::strtr ",
+                "present when it should not be in 2-argument form.";
+        }
+    }
+    elsif ( defined $from and not defined $to )
+    {
+        croak "Parameter #3 to PHP::Strings::strtr missing from".
+            " 3-argument form.";
+    }
+    else
+    {
+        return _strtr_tr( $string, $from, $to );
+    }
+}
+
+
+
+=head2 substr
+
+L<http://www.php.net/substr>
+
+
+B<PHP::Strings::substr WILL NOT BE IMPLEMENTED>.
+
+
+See L<perlfunc/"substr">.
+
+
+=cut
+
+
+# No fn export due to clash with reserved perl keyword.
+
+
+=head2 substr_compare
+
+L<http://www.php.net/substr_compare>
+
+
+=cut
+
+sub substr_compare {
+    death(<<'EODEATH');
+
+=pod
+
+B<PHP::Strings::substr_compare WILL NOT BE IMPLEMENTED>.
+
+Use L<substr|perlfunc/"substr"> and
+L<the C<cmp> operator|perlop/"Relational Operators">.
+
+
+=cut
+
+EODEATH
+}
+
+
+
+BEGIN { push @badeggs, "substr_compare" };
+
+
+=head2 substr_count
+
+L<http://www.php.net/substr_count>
+
+
+=cut
+
+sub substr_count {
+    death(<<'EODEATH');
+
+=pod
+
+B<PHP::Strings::substr_count WILL NOT BE IMPLEMENTED>.
+
+This is even in the FAQ.
+
+L<http://faq.perl.org/perlfaq4.html#How_can_I_count_the_>
+
+    my $count = () = $string =~ /regex/g;
+
+
+=cut
+
+EODEATH
+}
+
+
+
+BEGIN { push @badeggs, "substr_count" };
+
+
+=head2 substr_replace
+
+L<http://www.php.net/substr_replace>
+
+
+=cut
+
+sub substr_replace {
+    death(<<'EODEATH');
+
+=pod
+
+B<PHP::Strings::substr_replace WILL NOT BE IMPLEMENTED>.
+
+See L<perlfunc/"substr">.
+
+
+=cut
+
+EODEATH
+}
+
+
+
+BEGIN { push @badeggs, "substr_replace" };
+
+
+=head2 trim
+
+L<http://www.php.net/trim>
+
+
+=cut
+
+sub trim {
+    death(<<'EODEATH');
+
+=pod
+
+B<PHP::Strings::trim WILL NOT BE IMPLEMENTED>.
+
+Also in the FAQ.
+
+L<http://faq.perl.org/perlfaq4.html#How_do_I_strip_blank>
+
+See also L<"rtrim"> and L<"ltrim">.
+
+
+=cut
+
+EODEATH
+}
+
+
+
+BEGIN { push @badeggs, "trim" };
+
+
+=head2 ucfirst
+
+L<http://www.php.net/ucfirst>
+
+
+B<PHP::Strings::ucfirst WILL NOT BE IMPLEMENTED>.
+
+
+See L<perlfunc/"ucfirst">.
+
+
+=cut
+
+
+# No fn export due to clash with reserved perl keyword.
+
+
+=head2 ucwords
+
+L<http://www.php.net/ucwords>
+
+
+=cut
+
+sub ucwords {
+    death(<<'EODEATH');
+
+=pod
+
+B<PHP::Strings::ucwords WILL NOT BE IMPLEMENTED>.
+
+Another Perl FAQ.
+
+L<http://faq.perl.org/perlfaq4.html#How_do_I_capitalize_>
+
+
+=cut
+
+EODEATH
+}
+
+
+
+BEGIN { push @badeggs, "ucwords" };
+
+
+=head2 vprintf
+
+L<http://www.php.net/vprintf>
+
+
+=cut
+
+sub vprintf {
+    death(<<'EODEATH');
+
+=pod
+
+B<PHP::Strings::vprintf WILL NOT BE IMPLEMENTED>.
+
+Unlike PHP, Perl isn't stupid. See L<printf|perlfunc/"printf">.
+
+
+=cut
+
+EODEATH
+}
+
+
+
+BEGIN { push @badeggs, "vprintf" };
+
+
+=head2 vsprintf
+
+L<http://www.php.net/vsprintf>
+
+
+=cut
+
+sub vsprintf {
+    death(<<'EODEATH');
+
+=pod
+
+B<PHP::Strings::vsprintf WILL NOT BE IMPLEMENTED>.
+
+Unlike PHP, Perl isn't stupid. See L<sprintf|perlfunc/"sprintf">.
+
+
+=cut
+
+EODEATH
+}
+
+
+
+BEGIN { push @badeggs, "vsprintf" };
+
+
+=head2 wordwrap
+
+L<http://www.php.net/wordwrap>
+
+
+=cut
+
+sub wordwrap {
+    death(<<'EODEATH');
+
+=pod
+
+B<PHP::Strings::wordwrap WILL NOT BE IMPLEMENTED>.
+
+See L<Text::Wrap>, a core module.
+
+
+=cut
+
+EODEATH
+}
+
+
+
+BEGIN { push @badeggs, "wordwrap" };
 #line 214 Strings.tt
 
 # ========================================================================
@@ -2375,10 +2869,6 @@ L<"chunk_split">
 =item *
 
 L<"count_chars">
-
-=item *
-
-L<"crc32">
 
 =item *
 
@@ -2411,6 +2901,10 @@ L<"strip_tags">
 =item *
 
 L<"stripcslashes">
+
+=item *
+
+L<"strtr">
 
 =back
 
