@@ -2,11 +2,15 @@ docs: |
     Implemented, against my better judgement. It's trivial, like so many of
     the others.
 
+requirements:
+    List::Util: 1.13
+
 code: |
     sub str_shuffle
     {
+        require List::Util;
         my ( $string ) = validate_pos( @_, STRING );
 
-        return join '', shuffle split //, $string;
+        return join '', List::Util::shuffle split //, $string;
     }
 

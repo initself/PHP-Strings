@@ -1,8 +1,9 @@
 package PHP::Strings;
+#line 1 [% template.name %]
 # vim: ft=perl
 use strict;
 use warnings FATAL => 'all';
-our $VERSION = '0.25';
+our $VERSION = '0.26';
 
 =head1 NAME
 
@@ -40,37 +41,37 @@ read these docs.
 =item *
 
 "PHP in Contrast to Perl"
-http://tnx.nl/php.txt
+L<http://tnx.nl/php.txt>
 
 =item *
 
 "Experiences of Using PHP in Large Websites" by Aaron Crane, 2002
-http://www.ukuug.org/events/linux2002/papers/html/php/
+L<http://www.ukuug.org/events/linux2002/papers/html/php/>
 
 =item *
 
 "PHP Annoyances" by Neil de Carteret, 2002
-http://n3dst4.com/articles/phpannoyances/
+L<http://n3dst4.com/articles/phpannoyances/>
 
 =item *
 
 "I hate PHP" by Keith Devens, 2003
-http://keithdevens.com/weblog/archive/2003/Aug/13/HATE-PHP
+L<http://keithdevens.com/weblog/archive/2003/Aug/13/HATE-PHP>
 
 =item *
 
 "PHP: A love and hate relationship" by Ivan Ristic, 2002
-http://www.webkreator.com/php/community/php-love-and-hate.html
+L<http://www.webkreator.com/php/community/php-love-and-hate.html>
 
 =item *
 
 "PHP Sucks"
-http://czth.net/pH/PHPSucks
+L<http://czth.net/pH/PHPSucks>
 
 =item *
 
 Nathan Torkington's "list of PHP's shortcomings"
-http://nntp.x.perl.org/group/perl.advocacy/1458
+L<http://nntp.x.perl.org/group/perl.advocacy/1458>
 
 =back
 
@@ -79,6 +80,11 @@ http://nntp.x.perl.org/group/perl.advocacy/1458
 All arguments are checked using L<Params::Validate>. Bad arguments will
 cause an error to be thrown. If you wish to catch it, use C<eval>.
 
+Attempts to use functions I've decided to not implement (as distinct
+from functions that aren't implemented because I've not gotten around to
+either writing or deciding whether to write) will cause an error
+displaying the documentation for said function.
+
 =cut
 
 use base qw( Exporter );
@@ -86,7 +92,9 @@ use Carp qw( croak );
 use vars qw( %EXPORT_TAGS @EXPORT @EXPORT_OK @badeggs );
 use Params::Validate qw( :all );
 use Scalar::Util qw( looks_like_number );
-use List::Util qw( shuffle );
+[% FOR import = imports -%]
+use [% import %];
+[% END -%]
 
 use constant STRING => {
     type => SCALAR,
@@ -154,9 +162,9 @@ L<Exporter/"Specialised Import Lists">.
 [% FOR fn = fns.keys.sort -%]
 [% d = fns.$fn %]
 
-=head1 [% fn %]
+=head2 [% fn %]
 
-http://www.php.net/[% fn %]
+L<http://www.php.net/[% fn %]>
 
 [% IF d.badegg -%]
 
@@ -195,6 +203,7 @@ BEGIN { $EXPORT_TAGS{[% fn %]} = [ qw(
     [% FOR exp = d.exports %][% exp %] [% END %]
 ) ] }
 
+#line 0 fns/[% fn %].fn
 [% d.code %]
 [% ELSIF d.exports %]
 BEGIN { push @badeggs, "[% fn %]" };
@@ -202,7 +211,7 @@ BEGIN { push @badeggs, "[% fn %]" };
 # No fn export due to clash with reserved perl keyword.
 [% END -%]
 [% END -%]
-
+#line 214 [% template.name %]
 
 # ========================================================================
 
@@ -276,8 +285,8 @@ In particular, the test suite needs a lot of work. (If you
 feel like it. Hint Hint.)
 
 If you want to implement some of the functions that I've
-said will not be implemented, then I'll be happy to
-include them.
+said will not be implemented, then I'll be happy to include
+them. After all, what I think is worthless is my opinion.
 
 =head1 BUGS, REQUESTS, COMMENTS
 

@@ -1,5 +1,25 @@
 
 ---
+version: 0.26
+date:    10 Dec 2003
+changes:
+    - strip_tags and stripcslashes, with tests, implemented
+    - strstr added
+    - Added strrchr strpos strnatcasecmp strlen strrpos
+    - Added strncasecmp stripslashes strripos strnatcmp
+    - Added strncmp stripos stristr strrev
+
+    - L<> the URLs
+    - Correct heading level for functions.
+    - Better synopsis formatting
+
+    - Basic prereq per fn listing
+    - Writing to just Strings.pm now
+    - Uses Module::Install (for ExtUtils::AutoInstall mostly)
+    - Better requirements handling, allowing people to choose.
+    - Read version from pm
+
+---
 version: 0.25
 date:    06 Dec 2003
 changes:

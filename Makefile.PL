@@ -1,23 +1,29 @@
 use 5.006;
-use ExtUtils::MakeMaker;
+# vim: ft=perl
+use inc::Module::Install;
 
-WriteMakefile(
-    'NAME'		=> 'PHP::Strings',
-    'VERSION_FROM'	=> 'lib/PHP/Strings.pm',
-    'PREREQ_PM'		=> {
-        'Test::More'       => '0.45',
-        'Params::Validate' => '0.70',
-        'List::Util'       => '1.13',
-        'Scalar::Util'     => '1.13',
+name          ('PHP-Strings');
+version_from  ('Strings.pm');
+abstract      ("Implement some of PHP's functions");
+author        ('Iain Truskett (spoon@cpan.org)');
 
-    },
-    ($] >= 5.005 ?
-      (ABSTRACT_FROM => 'lib/PHP/Strings.pm',
-       AUTHOR     => 'Iain Truskett <spoon@cpan.org>') : ()),
-    'LIBS'		=> [''],
-    'DEFINE'		=> '',
-    'INC'		=> '-I.',
+requires( 'Test::More'       => '0.45' );
+requires( 'Params::Validate' => '0.70' );
+requires( 'Scalar::Util'     => '1.13' );
+
+features (
+     "Function `str_shuffle'" => [
+        'List::Util' => '1.13',
+     ],
+     "Function `strip_tags'" => [
+        'HTML::Entities' => '1.27',
+        'HTML::Scrubber' => '0.06',
+     ],
 );
+
+auto_install();
+&Meta->write;
+&Makefile->write;
 
 if  (eval {require ExtUtils::Constant; 1}) {
   # If you edit these definitions to change the constants used by this module,
