@@ -1,7 +1,8 @@
 package PHP::Strings;
+# vim: ft=perl
 use strict;
 use warnings FATAL => 'all';
-our $VERSION = '0.24';
+our $VERSION = '0.25';
 
 =head1 NAME
 
@@ -9,7 +10,11 @@ PHP::Strings - Implement some of PHP's string functions.
 
 =head1 SYNOPSIS
 
-# XXX
+   use PHP::Strings;
+
+   my $slashed = addcslashes( $not_escaped, $charlist );
+
+
 
 =head1 DESCRIPTION
 
@@ -28,6 +33,47 @@ marked as such in this documentation. They will still be exportable, but
 if you attempt to use said function you will get an error telling you to
 read these docs.
 
+=head1 RELATED READING
+
+=over 4
+
+=item *
+
+"PHP in Contrast to Perl"
+http://tnx.nl/php.txt
+
+=item *
+
+"Experiences of Using PHP in Large Websites" by Aaron Crane, 2002
+http://www.ukuug.org/events/linux2002/papers/html/php/
+
+=item *
+
+"PHP Annoyances" by Neil de Carteret, 2002
+http://n3dst4.com/articles/phpannoyances/
+
+=item *
+
+"I hate PHP" by Keith Devens, 2003
+http://keithdevens.com/weblog/archive/2003/Aug/13/HATE-PHP
+
+=item *
+
+"PHP: A love and hate relationship" by Ivan Ristic, 2002
+http://www.webkreator.com/php/community/php-love-and-hate.html
+
+=item *
+
+"PHP Sucks"
+http://czth.net/pH/PHPSucks
+
+=item *
+
+Nathan Torkington's "list of PHP's shortcomings"
+http://nntp.x.perl.org/group/perl.advocacy/1458
+
+=back
+
 =head1 ERROR HANDLING
 
 All arguments are checked using L<Params::Validate>. Bad arguments will
@@ -41,7 +87,6 @@ use vars qw( %EXPORT_TAGS @EXPORT @EXPORT_OK @badeggs );
 use Params::Validate qw( :all );
 use Scalar::Util qw( looks_like_number );
 use List::Util qw( shuffle );
-use HTML::TokeParser;
 
 use constant STRING => {
     type => SCALAR,
@@ -71,6 +116,15 @@ sub NUMBER_RANGE ($$) {
     };
 }
 
+sub death
+{
+    local $_ = shift;
+    s/^=.*$//gm;
+    s/^\n+//g;
+    s/\n+$//g;
+    croak "\n$_\n\n";
+}
+
 =head1 EXPORTS
 
 By default, nothing is exported.
@@ -97,13 +151,25 @@ L<Exporter/"Specialised Import Lists">.
 
 =head1 FUNCTIONS
 
-=head2 addcslashes
+
+
+=head1 addcslashes
+
+http://www.php.net/addcslashes
+
+
+Returns a string with backslashes before characters that are listed
+in C<$charlist>.
+
 
 =cut
 
+
+
+
 BEGIN { $EXPORT_TAGS{addcslashes} = [ qw(
-    addcslashes
-    ) ] }
+    addcslashes 
+) ] }
 
 sub addcslashes
 {
@@ -129,9 +195,21 @@ sub addcslashes
     return $str;
 }
 
-=head2 addslashes
 
-B<THIS FUNCTION WILL NOT BE IMPLEMENTED>.
+
+=head1 addslashes
+
+http://www.php.net/addslashes
+
+
+=cut
+
+sub addslashes {
+    death(<<'EODEATH');
+
+=pod
+
+B<PHP::Strings::addslashes WILL NOT BE IMPLEMENTED>.
 
 Returns a string with backslashes before characters that need to be
 quoted in SQL queries. You should never need this function. I mean,
@@ -148,30 +226,71 @@ versions of BASIC). This function doesn't.
 
 The less said about PHP's C<magic_quotes> "feature", the better.
 
+
 =cut
 
-BEGIN { push @badeggs, "addslashes" }
+EODEATH
+}
 
-=head2 bin2hex
 
-B<THIS FUNCTION WILL NOT BE IMPLEMENTED>.
+
+BEGIN { push @badeggs, "addslashes" };
+
+
+=head1 bin2hex
+
+http://www.php.net/bin2hex
+
+
+=cut
+
+sub bin2hex {
+    death(<<'EODEATH');
+
+=pod
+
+B<PHP::Strings::bin2hex WILL NOT BE IMPLEMENTED>.
 
 This is trivially implemented using L<pack|perlfunc/"pack">.
 
     my $hex = unpack "H*", $data;
 
+
 =cut
 
-BEGIN { push @badeggs, "bin2hex" }
+EODEATH
+}
 
-=head2 chop
+
+
+BEGIN { push @badeggs, "bin2hex" };
+
+
+=head1 chop
+
+http://www.php.net/chop
+
+
+B<PHP::Strings::chop WILL NOT BE IMPLEMENTED>.
 
 PHP's C<chop> function is an alias to its L<"rtrim"> function.
 
 Perl has a builtin named L<chop|perlfunc/"chop">. Thus we do
 not support the use of C<chop> as an alias to L<"rtrim">.
 
-=head2 chr
+
+=cut
+
+
+# No fn export due to clash with reserved perl keyword.
+
+
+=head1 chr
+
+http://www.php.net/chr
+
+
+B<PHP::Strings::chr WILL NOT BE IMPLEMENTED>.
 
 PHP's and Perl's L<chr|perlfunc/"chr"> functions operate sufficiently
 identically.
@@ -183,7 +302,17 @@ definition.
 Note that it returns B<one character>, which in some string
 encodings may not necessarily be B<one byte>.
 
-=head2 chunk_split
+
+=cut
+
+
+# No fn export due to clash with reserved perl keyword.
+
+
+=head1 chunk_split
+
+http://www.php.net/chunk_split
+
 
 Returns the given string, split into smaller chunks.
 
@@ -198,11 +327,15 @@ Also trivially implemented as a regular expression:
     $body =~ s/(.{$chunklen})/$1$end/sg;
     $body .= $end;
 
+
 =cut
 
+
+
+
 BEGIN { $EXPORT_TAGS{chunk_split} = [ qw(
-    chunk_split
-    ) ] }
+    chunk_split 
+) ] }
 
 sub chunk_split
 {
@@ -218,17 +351,38 @@ sub chunk_split
     return $body;
 }
 
-=head2 convert_cyr_string
 
-B<THIS FUNCTION WILL NOT BE IMPLEMENTED>.
+
+=head1 convert_cyr_string
+
+http://www.php.net/convert_cyr_string
+
+
+=cut
+
+sub convert_cyr_string {
+    death(<<'EODEATH');
+
+=pod
+
+B<PHP::Strings::convert_cyr_string WILL NOT BE IMPLEMENTED>.
 
 Perl has the L<Encode> module to convert between character encodings.
 
 =cut
 
-BEGIN { push @badeggs, "convert_cyr_string" }
+EODEATH
+}
 
-=head2 count_chars
+
+
+BEGIN { push @badeggs, "convert_cyr_string" };
+
+
+=head1 count_chars
+
+http://www.php.net/count_chars
+
 
 A somewhat daft function that returns counts of characters in a string.
 
@@ -251,13 +405,17 @@ indicates what sort of return value to return. The default mode is C<0>.
     3    Return string composed of used byte-values.
     4    Return string composed of unused byte-values.
 
-   my %freq = count_chars( $string, 1 );
+    my %freq = count_chars( $string, 1 );
+
 
 =cut
 
+
+
+
 BEGIN { $EXPORT_TAGS{count_chars} = [ qw(
-    count_chars
-    ) ] }
+    count_chars 
+) ] }
 
 sub count_chars
 {
@@ -290,34 +448,89 @@ sub count_chars
     croak "Reached a line we should not have.";
 }
 
-=head2 crc32
 
-XXX
 
-=head2 crypt
+=head1 crc32
+
+http://www.php.net/crc32
+
+
+TBD
+
+=cut
+
+
+
+
+BEGIN { $EXPORT_TAGS{crc32} = [ qw(
+    crc32 
+) ] }
+
+sub crc32 { croak "TBD" }
+
+
+=head1 crypt
+
+http://www.php.net/crypt
+
+
+B<PHP::Strings::crypt WILL NOT BE IMPLEMENTED>.
 
 PHP's crypt is the same as Perl's. Thus there's no need for
 C<PHP::String> to provide an implementation.
 
 The C<CRYPT_*> constants are not provided.
 
-=head2 echo
 
-B<THIS FUNCTION WILL NOT BE IMPLEMENTED>.
+=cut
+
+
+# No fn export due to clash with reserved perl keyword.
+
+
+=head1 echo
+
+http://www.php.net/echo
+
+
+=cut
+
+sub echo {
+    death(<<'EODEATH');
+
+=pod
+
+B<PHP::Strings::echo WILL NOT BE IMPLEMENTED>.
 
 See L<perlfunc/"print">.
 
 =cut
 
-BEGIN { push @badeggs, "echo" }
+EODEATH
+}
 
-=head2 explode
 
-B<THIS FUNCTION WILL NOT BE IMPLEMENTED>.
+
+BEGIN { push @badeggs, "echo" };
+
+
+=head1 explode
+
+http://www.php.net/explode
+
+
+=cut
+
+sub explode {
+    death(<<'EODEATH');
+
+=pod
+
+B<PHP::Strings::explode WILL NOT BE IMPLEMENTED>.
 
 Use the C<\Q> regex metachar and L<split|perlfunc/"split">.
 
-   my @pieces = split /\Q$separator/, $string, $limit;
+    my @pieces = split /\Q$separator/, $string, $limit;
 
 See L<perlfunc/"split"> for more details.
 
@@ -326,13 +539,30 @@ returning false. Note also that C<split "..."> is the same as
 C<split /.../> which means to split everywhere three characters are
 matched. The first argument to C<split> is always a regex.
 
+
 =cut
 
-BEGIN { push @badeggs, "explode" }
+EODEATH
+}
 
-=head2 fprintf
 
-B<THIS FUNCTION WILL NOT BE IMPLEMENTED>.
+
+BEGIN { push @badeggs, "explode" };
+
+
+=head1 fprintf
+
+http://www.php.net/fprintf
+
+
+=cut
+
+sub fprintf {
+    death(<<'EODEATH');
+
+=pod
+
+B<PHP::Strings::fprintf WILL NOT BE IMPLEMENTED>.
 
 Perl's L<printf|perlfunc/"printf"> can be told to which file handle to
 print.
@@ -341,93 +571,231 @@ print.
 
 See L<perlfunc/"printf"> and L<perlfunc/"print"> for details.
 
+
 =cut
 
-BEGIN { push @badeggs, "fprintf" }
+EODEATH
+}
 
-=head2 get_html_translation_table
 
-B<THIS FUNCTION WILL NOT BE IMPLEMENTED>.
+
+BEGIN { push @badeggs, "fprintf" };
+
+
+=head1 get_html_translation_table
+
+http://www.php.net/get_html_translation_table
+
+
+=cut
+
+sub get_html_translation_table {
+    death(<<'EODEATH');
+
+=pod
+
+B<PHP::Strings::get_html_translation_table WILL NOT BE IMPLEMENTED>.
 
 Use the L<HTML::Entities> module to escape and unescape characters.
 
 =cut
 
-BEGIN { push @badeggs, "get_html_translation_table" }
+EODEATH
+}
 
-=head2 hebrev
 
-B<THIS FUNCTION WILL NOT BE IMPLEMENTED>.
+
+BEGIN { push @badeggs, "get_html_translation_table" };
+
+
+=head1 hebrev
+
+http://www.php.net/hebrev
+
+
+=cut
+
+sub hebrev {
+    death(<<'EODEATH');
+
+=pod
+
+B<PHP::Strings::hebrev WILL NOT BE IMPLEMENTED>.
 
 Use the L<Encode> module to convert between character encodings.
 
 =cut
 
-BEGIN { push @badeggs, "hebrev" }
+EODEATH
+}
 
-=head2 hebrevc
 
-B<THIS FUNCTION WILL NOT BE IMPLEMENTED>.
+
+BEGIN { push @badeggs, "hebrev" };
+
+
+=head1 hebrevc
+
+http://www.php.net/hebrevc
+
+
+=cut
+
+sub hebrevc {
+    death(<<'EODEATH');
+
+=pod
+
+B<PHP::Strings::hebrevc WILL NOT BE IMPLEMENTED>.
 
 Use the L<Encode> module to convert between character encodings.
 
 =cut
 
-BEGIN { push @badeggs, "hebrevc" }
+EODEATH
+}
 
-=head2 html_entity_decode
 
-B<THIS FUNCTION WILL NOT BE IMPLEMENTED>.
+
+BEGIN { push @badeggs, "hebrevc" };
+
+
+=head1 html_entity_decode
+
+http://www.php.net/html_entity_decode
+
+
+=cut
+
+sub html_entity_decode {
+    death(<<'EODEATH');
+
+=pod
+
+B<PHP::Strings::html_entity_decode WILL NOT BE IMPLEMENTED>.
 
 Use the L<HTML::Entities> module to decode character entities.
 
 =cut
 
-BEGIN { push @badeggs, "html_entity_decode" }
+EODEATH
+}
 
-=head2 htmlentities
 
-B<THIS FUNCTION WILL NOT BE IMPLEMENTED>.
 
-Use the L<HTML::Entities> module to encode characters as HTML entities.
+BEGIN { push @badeggs, "html_entity_decode" };
 
-=cut
 
-BEGIN { push @badeggs, "htmlentities" }
+=head1 htmlentities
 
-=head2 htmlspecialchars
+http://www.php.net/htmlentities
 
-B<THIS FUNCTION WILL NOT BE IMPLEMENTED>.
-
-Use the L<HTML::Entities> module to encode characters as HTML entities.
 
 =cut
 
-BEGIN { push @badeggs, "htmlspecialchars" }
+sub htmlentities {
+    death(<<'EODEATH');
 
-=head2 implode
+=pod
 
-B<THIS FUNCTION WILL NOT BE IMPLEMENTED>.
+B<PHP::Strings::htmlentities WILL NOT BE IMPLEMENTED>.
+
+Use the L<HTML::Entities> module to encode character entities.
+
+=cut
+
+EODEATH
+}
+
+
+
+BEGIN { push @badeggs, "htmlentities" };
+
+
+=head1 htmlspecialchars
+
+http://www.php.net/htmlspecialchars
+
+
+=cut
+
+sub htmlspecialchars {
+    death(<<'EODEATH');
+
+=pod
+
+B<PHP::Strings::htmlspecialchars WILL NOT BE IMPLEMENTED>.
+
+Use the L<HTML::Entities> module to encode character entities.
+
+=cut
+
+EODEATH
+}
+
+
+
+BEGIN { push @badeggs, "htmlspecialchars" };
+
+
+=head1 implode
+
+http://www.php.net/implode
+
+
+=cut
+
+sub implode {
+    death(<<'EODEATH');
+
+=pod
+
+B<PHP::Strings::implode WILL NOT BE IMPLEMENTED>.
 
 See L<perlfunc/"join">. Note that join cannot accept its arguments in
 either order because that's just not how Perl arrays and lists work.
 Note also that the joining sequence is not optional.
 
+
 =cut
 
-BEGIN { push @badeggs, "implode" }
+EODEATH
+}
 
-=head2 join
 
-B<THIS FUNCTION WILL NOT BE IMPLEMENTED>.
+
+BEGIN { push @badeggs, "implode" };
+
+
+=head1 join
+
+http://www.php.net/join
+
+
+B<PHP::Strings::join WILL NOT BE IMPLEMENTED>.
 
 PHP's C<join> is an alias for C<implode>. See L<"implode">.
 
+
 =cut
 
-=head2 levenshtein
 
-B<THIS FUNCTION WILL NOT BE IMPLEMENTED>.
+# No fn export due to clash with reserved perl keyword.
+
+
+=head1 levenshtein
+
+http://www.php.net/levenshtein
+
+
+=cut
+
+sub levenshtein {
+    death(<<'EODEATH');
+
+=pod
+
+B<PHP::Strings::levenshtein WILL NOT BE IMPLEMENTED>.
 
 I have no idea why PHP has this function.
 
@@ -435,38 +803,93 @@ See L<Text::Levenshtein>, L<Text::LevenshteinXS>, L<String::Approx>,
 L<Text::PHraseDistance> and probably any number of other modules on
 CPAN.
 
-=cut
-
-BEGIN { push @badeggs, "levenshtein" }
-
-=head2 localeconv
-
-B<THIS FUNCTION WILL NOT BE IMPLEMENTED>.
-
-See L<perllocale>.
 
 =cut
 
-BEGIN { push @badeggs, "localeconv" }
+EODEATH
+}
 
-=head2 ltrim
 
-B<THIS FUNCTION WILL NOT BE IMPLEMENTED>.
+
+BEGIN { push @badeggs, "levenshtein" };
+
+
+=head1 ltrim
+
+http://www.php.net/ltrim
+
+
+=cut
+
+sub ltrim {
+    death(<<'EODEATH');
+
+=pod
+
+B<PHP::Strings::ltrim WILL NOT BE IMPLEMENTED>.
 
 As per L<perlfaq>:
 
-   $string =~ s/^\s+//;
+    $string =~ s/^\s+//;
 
 A basic glance through L<perlretut> or L<perlreref> should give you an
 idea on how to change what characters get trimmed.
 
+
 =cut
 
-BEGIN { push @badeggs, "ltrim" }
+EODEATH
+}
 
-=head2 md5_file
 
-B<THIS FUNCTION WILL NOT BE IMPLEMENTED>.
+
+BEGIN { push @badeggs, "ltrim" };
+
+
+=head1 md5
+
+http://www.php.net/md5
+
+
+=cut
+
+sub md5 {
+    death(<<'EODEATH');
+
+=pod
+
+B<PHP::Strings::md5 WILL NOT BE IMPLEMENTED>.
+
+See L<Digest::MD5> which provides a number of functions for computing
+MD5 hashes from various sources and to various formats.
+
+Note: the user notes for this function at http://www.php.net/md5 are
+among the most unintentionally funny and misinformed I've read.
+
+
+=cut
+
+EODEATH
+}
+
+
+
+BEGIN { push @badeggs, "md5" };
+
+
+=head1 md5_file
+
+http://www.php.net/md5_file
+
+
+=cut
+
+sub md5_file {
+    death(<<'EODEATH');
+
+=pod
+
+B<PHP::Strings::md5_file WILL NOT BE IMPLEMENTED>.
 
 The L<Digest::MD5> module provides sufficient support.
 
@@ -490,42 +913,60 @@ L<Digest::MD4> or some other digest mechanism.
 Again, I wonder why PHP has the function as they so arbitrarily
 hobble it.
 
-=cut
-
-BEGIN { push @badeggs, "md5_file" }
-
-=head2 md5
-
-B<THIS FUNCTION WILL NOT BE IMPLEMENTED>.
-
-See L<Digest::MD5> which provides a number of functions for computing
-MD5 hashes from various sources and to various formats.
-
-Note: the user notes for this function at http://www.php.net/md5 are
-among the most unintentionally funny and misinformed I've read.
 
 =cut
 
-BEGIN { push @badeggs, "md5" }
+EODEATH
+}
 
-=head2 metaphone
 
-B<THIS FUNCTION WILL NOT BE IMPLEMENTED>.
+
+BEGIN { push @badeggs, "md5_file" };
+
+
+=head1 metaphone
+
+http://www.php.net/metaphone
+
+
+=cut
+
+sub metaphone {
+    death(<<'EODEATH');
+
+=pod
+
+B<PHP::Strings::metaphone WILL NOT BE IMPLEMENTED>.
 
 L<Text::Metaphone> and L<Text::DoubleMetaphone> and
 L<Text::TransMetaphone> all provide metaphonic calculations.
 
-=cut
-
-BEGIN { push @badeggs, "metaphone" }
-
-=head2 money_format
 
 =cut
+
+EODEATH
+}
+
+
+
+BEGIN { push @badeggs, "metaphone" };
+
+
+=head1 money_format
+
+http://www.php.net/money_format
+
+
+sprintf for money.
+
+=cut
+
+
+
 
 BEGIN { $EXPORT_TAGS{money_format} = [ qw(
-    money_format
-    ) ] }
+    money_format 
+) ] }
 
 sub money_format
 {
@@ -545,32 +986,80 @@ sub money_format
     return $rv;
 }
 
-=head2 nl_langinfo
 
-B<THIS FUNCTION WILL NOT BE IMPLEMENTED>.
 
-L<I18N::Langinfo> has a C<langinfo> command that corresponds to PHP's
-C<nl_langinfo> function.
+=head1 nl2br
+
+http://www.php.net/nl2br
+
 
 =cut
 
-BEGIN { push @badeggs, "nl_langinfo" }
+sub nl2br {
+    death(<<'EODEATH');
 
-=head2 nl2br
+=pod
 
-B<THIS FUNCTION WILL NOT BE IMPLEMENTED>.
+B<PHP::Strings::nl2br WILL NOT BE IMPLEMENTED>.
 
 This is trivially implemented as:
 
     s,$,<br />,mg;
 
-=cut
-
-BEGIN { push @badeggs, "nl2br" }
-
-=head2 number_format
 
 =cut
+
+EODEATH
+}
+
+
+
+BEGIN { push @badeggs, "nl2br" };
+
+
+=head1 nl_langinfo
+
+http://www.php.net/nl_langinfo
+
+
+=cut
+
+sub nl_langinfo {
+    death(<<'EODEATH');
+
+=pod
+
+B<PHP::Strings::nl_langinfo WILL NOT BE IMPLEMENTED>.
+
+L<I18N::Langinfo> has a C<langinfo> command that corresponds to PHP's
+C<nl_langinfo> function.
+
+
+=cut
+
+EODEATH
+}
+
+
+
+BEGIN { push @badeggs, "nl_langinfo" };
+
+
+=head1 number_format
+
+http://www.php.net/number_format
+
+
+TBD
+
+=cut
+
+
+
+
+BEGIN { $EXPORT_TAGS{number_format} = [ qw(
+    number_format 
+) ] }
 
 sub number_format
 {
@@ -588,168 +1077,368 @@ sub number_format
     return $formatted;
 }
 
-=head2 ord
 
-B<THIS FUNCTION WILL NOT BE IMPLEMENTED>.
+
+=head1 ord
+
+http://www.php.net/ord
+
+
+B<PHP::Strings::ord WILL NOT BE IMPLEMENTED>.
 
 See L<perlfunc/"ord">. Note that Perl returns Unicode value, not ASCII.
 
 =cut
 
-BEGIN { push @badeggs, "ord" }
 
-=head2 parse_str
+# No fn export due to clash with reserved perl keyword.
 
-B<THIS FUNCTION WILL NOT BE IMPLEMENTED>.
+
+=head1 parse_str
+
+http://www.php.net/parse_str
+
+
+=cut
+
+sub parse_str {
+    death(<<'EODEATH');
+
+=pod
+
+B<PHP::Strings::parse_str WILL NOT BE IMPLEMENTED>.
 
 See instead the L<CGI> and L<URI> modules which handles that sort of
 thing.
 
+
 =cut
 
-BEGIN { push @badeggs, "parse_str" }
+EODEATH
+}
 
-=head2 print
 
-B<THIS FUNCTION WILL NOT BE IMPLEMENTED>.
+
+BEGIN { push @badeggs, "parse_str" };
+
+
+=head1 print
+
+http://www.php.net/print
+
+
+B<PHP::Strings::print WILL NOT BE IMPLEMENTED>.
 
 See L<perlfunc/"print">.
 
+
 =cut
 
-#BEGIN { push @badeggs, "print" }
 
-=head2 printf
+# No fn export due to clash with reserved perl keyword.
 
-B<THIS FUNCTION WILL NOT BE IMPLEMENTED>.
+
+=head1 printf
+
+http://www.php.net/printf
+
+
+B<PHP::Strings::printf WILL NOT BE IMPLEMENTED>.
 
 See L<perlfunc/"printf">.
 
+
 =cut
 
-#BEGIN { push @badeggs, "printf" }
 
-=head2 quoted_printable_decode
+# No fn export due to clash with reserved perl keyword.
 
-B<THIS FUNCTION WILL NOT BE IMPLEMENTED>.
+
+=head1 quoted_printable_decode
+
+http://www.php.net/quoted_printable_decode
+
+
+=cut
+
+sub quoted_printable_decode {
+    death(<<'EODEATH');
+
+=pod
+
+B<PHP::Strings::quoted_printable_decode WILL NOT BE IMPLEMENTED>.
 
 L<MIME::QuotedPrint> provides functions for encoding and decoding
 quoted-printable strings.
 
+
 =cut
 
-BEGIN { push @badeggs, "quoted_printable_decode" }
+EODEATH
+}
 
-=head2 quotemeta
 
-B<THIS FUNCTION WILL NOT BE IMPLEMENTED>.
+
+BEGIN { push @badeggs, "quoted_printable_decode" };
+
+
+=head1 quotemeta
+
+http://www.php.net/quotemeta
+
+
+B<PHP::Strings::quotemeta WILL NOT BE IMPLEMENTED>.
 
 See L<perlfunc/"quotemeta">.
 
 =cut
 
-BEGIN { push @badeggs, "quotemeta" }
 
-=head2 rtrim
+# No fn export due to clash with reserved perl keyword.
 
-B<THIS FUNCTION WILL NOT BE IMPLEMENTED>.
 
-Another trivial regular expression:
+=head1 rtrim
 
-   $string =~ s/\s+$//;
+http://www.php.net/rtrim
 
-See the notes on L<"ltrim">.
 
 =cut
 
-BEGIN { push @badeggs, "rtrim" }
+sub rtrim {
+    death(<<'EODEATH');
 
-=head2 setlocale
+=pod
 
-B<THIS FUNCTION WILL NOT BE IMPLEMENTED>.
+B<PHP::Strings::rtrim WILL NOT BE IMPLEMENTED>.
+
+Another trivial regular expression:
+
+    $string =~ s/\s+$//;
+
+See the notes on L<"ltrim">.
+
+
+=cut
+
+EODEATH
+}
+
+
+
+BEGIN { push @badeggs, "rtrim" };
+
+
+=head1 setlocale
+
+http://www.php.net/setlocale
+
+
+=cut
+
+sub setlocale {
+    death(<<'EODEATH');
+
+=pod
+
+B<PHP::Strings::setlocale WILL NOT BE IMPLEMENTED>.
 
 C<setlocale> is provided by the L<POSIX> module.
 
 =cut
 
-#BEGIN { push @badeggs, "setlocale" }
+EODEATH
+}
 
-=head2 sha1_file
 
-B<THIS FUNCTION WILL NOT BE IMPLEMENTED>.
+
+BEGIN { push @badeggs, "setlocale" };
+
+
+=head1 sha1
+
+http://www.php.net/sha1
+
+
+=cut
+
+sub sha1 {
+    death(<<'EODEATH');
+
+=pod
+
+B<PHP::Strings::sha1 WILL NOT BE IMPLEMENTED>.
+
+See L<"md5">, mentally substituting L<Digest::SHA1> for L<Digest::MD5>,
+although the user notes are not as funny.
+
+
+=cut
+
+EODEATH
+}
+
+
+
+BEGIN { push @badeggs, "sha1" };
+
+
+=head1 sha1_file
+
+http://www.php.net/sha1_file
+
+
+=cut
+
+sub sha1_file {
+    death(<<'EODEATH');
+
+=pod
+
+B<PHP::Strings::sha1_file WILL NOT BE IMPLEMENTED>.
 
 See L<"md5_file">
 
 =cut
 
-BEGIN { push @badeggs, "sha1_file" }
+EODEATH
+}
 
-=head2 sha1
 
-B<THIS FUNCTION WILL NOT BE IMPLEMENTED>.
 
-See L<"md5">, mentally substituting L<Digest::SHA1> for L<Digest::MD5>,
-although the user notes are not as funny.
+BEGIN { push @badeggs, "sha1_file" };
 
-=cut
 
-BEGIN { push @badeggs, "sha1" }
+=head1 similar_text
 
-=head2 similar_text
+http://www.php.net/similar_text
 
-XXX
+
+TBD
 
 =cut
 
-=head2 soundex
 
-B<THIS FUNCTION WILL NOT BE IMPLEMENTED>.
+
+
+BEGIN { $EXPORT_TAGS{similar_text} = [ qw(
+    similar_text 
+) ] }
+
+sub similar_text { croak "TBD" }
+
+
+=head1 soundex
+
+http://www.php.net/soundex
+
+
+=cut
+
+sub soundex {
+    death(<<'EODEATH');
+
+=pod
+
+B<PHP::Strings::soundex WILL NOT BE IMPLEMENTED>.
 
 See L<Text::Soundex>, which also happens to be a core module.
 
 =cut
 
-BEGIN { push @badeggs, "soundex" }
+EODEATH
+}
 
-=head2 sprintf
 
-B<THIS FUNCTION WILL NOT BE IMPLEMENTED>.
+
+BEGIN { push @badeggs, "soundex" };
+
+
+=head1 sprintf
+
+http://www.php.net/sprintf
+
+
+B<PHP::Strings::sprintf WILL NOT BE IMPLEMENTED>.
 
 See L<perlfunc/"sprintf">.
 
 =cut
 
-BEGIN { push @badeggs, "sprintf" }
 
-=head2 sscanf
+# No fn export due to clash with reserved perl keyword.
 
-B<THIS FUNCTION WILL NOT BE IMPLEMENTED>.
+
+=head1 sscanf
+
+http://www.php.net/sscanf
+
+
+=cut
+
+sub sscanf {
+    death(<<'EODEATH');
+
+=pod
+
+B<PHP::Strings::sscanf WILL NOT BE IMPLEMENTED>.
 
 This is a godawful function. You should be using regular expressions
 instead. See L<perlretut> and L<perlre>.
 
+
 =cut
 
-BEGIN { push @badeggs, "sscanf" }
+EODEATH
+}
 
-=head2 str_ireplace
 
-B<THIS FUNCTION WILL NOT BE IMPLEMENTED>.
+
+BEGIN { push @badeggs, "sscanf" };
+
+
+=head1 str_ireplace
+
+http://www.php.net/str_ireplace
+
+
+=cut
+
+sub str_ireplace {
+    death(<<'EODEATH');
+
+=pod
+
+B<PHP::Strings::str_ireplace WILL NOT BE IMPLEMENTED>.
 
 Use the C<s///> operator instead. See L<perlop> and L<perlre> for
 details.
 
-=cut
-
-BEGIN { push @badeggs, "str_ireplace" }
-
-=head2 str_pad
 
 =cut
+
+EODEATH
+}
+
+
+
+BEGIN { push @badeggs, "str_ireplace" };
+
+
+=head1 str_pad
+
+http://www.php.net/str_pad
+
+
+TBD
+
+=cut
+
+
+
 
 BEGIN { $EXPORT_TAGS{str_pad} = [ qw(
-    str_pad STR_PAD_RIGHT STR_PAD_LEFT STR_PAD_BOTH
-    ) ] }
+    str_pad STR_PAD_RIGHT STR_PAD_LEFT STR_PAD_BOTH 
+) ] }
 
 use constant STR_PAD_RIGHT => 1;
 use constant STR_PAD_LEFT  => 2;
@@ -794,31 +1483,77 @@ sub str_pad
     $rv;
 }
 
-=head2 str_repeat
 
-B<THIS FUNCTION WILL NOT BE IMPLEMENTED>.
+
+=head1 str_repeat
+
+http://www.php.net/str_repeat
+
+
+=cut
+
+sub str_repeat {
+    death(<<'EODEATH');
+
+=pod
+
+B<PHP::Strings::str_repeat WILL NOT BE IMPLEMENTED>.
 
 Instead, use the C<x> operator. See L<perlop> for details.
 
     my $by_ten = "-=" x 10;
 
+
 =cut
 
-BEGIN { push @badeggs, "str_repeat" }
+EODEATH
+}
 
-=head2 str_replace
 
-B<THIS FUNCTION WILL NOT BE IMPLEMENTED>.
+
+BEGIN { push @badeggs, "str_repeat" };
+
+
+=head1 str_replace
+
+http://www.php.net/str_replace
+
+
+=cut
+
+sub str_replace {
+    death(<<'EODEATH');
+
+=pod
+
+B<PHP::Strings::str_replace WILL NOT BE IMPLEMENTED>.
 
 See the C<s///> operator. L<perlop> and L<perlre> have details.
 
+
 =cut
 
-BEGIN { push @badeggs, "str_replace" }
+EODEATH
+}
 
-=head2 str_rot13
 
-B<THIS FUNCTION WILL NOT BE IMPLEMENTED>.
+
+BEGIN { push @badeggs, "str_replace" };
+
+
+=head1 str_rot13
+
+http://www.php.net/str_rot13
+
+
+=cut
+
+sub str_rot13 {
+    death(<<'EODEATH');
+
+=pod
+
+B<PHP::Strings::str_rot13 WILL NOT BE IMPLEMENTED>.
 
 This is rather trivially implemented as:
 
@@ -826,18 +1561,34 @@ This is rather trivially implemented as:
 
 (As per "Programming Perl", 3rd edition, section 5.2.4.)
 
+
 =cut
 
-BEGIN { push @badeggs, "str_rot13" }
+EODEATH
+}
 
-=head2 str_shuffle
+
+
+BEGIN { push @badeggs, "str_rot13" };
+
+
+=head1 str_shuffle
+
+http://www.php.net/str_shuffle
+
 
 Implemented, against my better judgement. It's trivial, like so many of
 the others.
 
+
 =cut
 
-BEGIN { $EXPORT_TAGS{str_shuffle} = [qw( str_shuffle )] }
+
+
+
+BEGIN { $EXPORT_TAGS{str_shuffle} = [ qw(
+    str_shuffle 
+) ] }
 
 sub str_shuffle
 {
@@ -846,25 +1597,52 @@ sub str_shuffle
     return join '', shuffle split //, $string;
 }
 
-=head2 str_split
 
-B<THIS FUNCTION WILL NOT BE IMPLEMENTED>.
+
+=head1 str_split
+
+http://www.php.net/str_split
+
+
+=cut
+
+sub str_split {
+    death(<<'EODEATH');
+
+=pod
+
+B<PHP::Strings::str_split WILL NOT BE IMPLEMENTED>.
 
 See L<perlfunc/"split"> for details.
 
     my @bits = split /(.{,$len})/, $string;
 
-=cut
-
-BEGIN { push @badeggs, "str_split" }
-
-=head2 str_word_count
-
-
 
 =cut
 
-BEGIN { $EXPORT_TAGS{str_word_count} = [qw( str_word_count )] }
+EODEATH
+}
+
+
+
+BEGIN { push @badeggs, "str_split" };
+
+
+=head1 str_word_count
+
+http://www.php.net/str_word_count
+
+
+TBD
+
+=cut
+
+
+
+
+BEGIN { $EXPORT_TAGS{str_word_count} = [ qw(
+    str_word_count 
+) ] }
 
 sub str_word_count
 {
@@ -889,43 +1667,105 @@ sub str_word_count
     }
 }
 
-=head2 strcasecmp
 
-B<THIS FUNCTION WILL NOT BE IMPLEMENTED>.
+
+=head1 strcasecmp
+
+http://www.php.net/strcasecmp
+
+
+=cut
+
+sub strcasecmp {
+    death(<<'EODEATH');
+
+=pod
+
+B<PHP::Strings::strcasecmp WILL NOT BE IMPLEMENTED>.
 
 Equivalent to:
 
     lc($a) cmp lc($b)
 
+
 =cut
 
-BEGIN { push @badeggs, "strcasecmp" }
+EODEATH
+}
 
-=head2 strchr
 
-B<THIS FUNCTION WILL NOT BE IMPLEMENTED>.
+
+BEGIN { push @badeggs, "strcasecmp" };
+
+
+=head1 strchr
+
+http://www.php.net/strchr
+
+
+=cut
+
+sub strchr {
+    death(<<'EODEATH');
+
+=pod
+
+B<PHP::Strings::strchr WILL NOT BE IMPLEMENTED>.
 
 See L<"strstr">
 
 =cut
 
-BEGIN { push @badeggs, "strchr" }
+EODEATH
+}
 
-=head2 strcmp
 
-B<THIS FUNCTION WILL NOT BE IMPLEMENTED>.
+
+BEGIN { push @badeggs, "strchr" };
+
+
+=head1 strcmp
+
+http://www.php.net/strcmp
+
+
+=cut
+
+sub strcmp {
+    death(<<'EODEATH');
+
+=pod
+
+B<PHP::Strings::strcmp WILL NOT BE IMPLEMENTED>.
 
 Equivalent to:
 
     $a cmp $b
 
+
 =cut
 
-BEGIN { push @badeggs, "strcmp" }
+EODEATH
+}
 
-=head2 strcoll
 
-B<THIS FUNCTION WILL NOT BE IMPLEMENTED>.
+
+BEGIN { push @badeggs, "strcmp" };
+
+
+=head1 strcoll
+
+http://www.php.net/strcoll
+
+
+=cut
+
+sub strcoll {
+    death(<<'EODEATH');
+
+=pod
+
+B<PHP::Strings::strcoll WILL NOT BE IMPLEMENTED>.
 
 Equivalent to:
 
@@ -933,59 +1773,125 @@ Equivalent to:
 
     $a cmp $b
 
+
 =cut
 
-BEGIN { push @badeggs, "strcoll" }
+EODEATH
+}
 
-=head2 strcspn
 
-B<THIS FUNCTION WILL NOT BE IMPLEMENTED>.
+
+BEGIN { push @badeggs, "strcoll" };
+
+
+=head1 strcspn
+
+http://www.php.net/strcspn
+
+
+=cut
+
+sub strcspn {
+    death(<<'EODEATH');
+
+=pod
+
+B<PHP::Strings::strcspn WILL NOT BE IMPLEMENTED>.
 
 Trivially equivalent to:
 
     my $cspn;
     $cspn = $-[0]-1 if $string =~ m/[chars]/;
 
-=cut
-
-BEGIN { push @badeggs, "strcspn" }
-
-=head2 strip_tags
-
-B<THIS FUNCTION WILL NOT BE IMPLEMENTED>.
-
-Gosh. That was hard.
 
 =cut
 
-BEGIN { $EXPORT_TAGS{strip_tags} = [qw( strp_tags )] }
-
-sub strip_tags
-{
-    my ( $html, $exclusion ) = validate_pos( @_,
-        STRING,
-        {
-            %{+STRING},
-            default => '',
-        }
-    );
-
-    my %ignore = map { $_, 1 } ( $exclusion =~ /<(\w+)>/g );
-    my @nexts = map { ( $_, "/$_" ) } keys %ignore;
-    my $p = HTML::TokeParser->new( \$html );
-
-    my $rv;
-    while ( my $text = $p->get_text( @nexts ) )
-    {
-        $rv .= $text;
-    }
-    $rv .= $p->get_tag->[1];
-
-    return $rv;
+EODEATH
 }
 
 
+
+BEGIN { push @badeggs, "strcspn" };
+
+
+=head1 strip_tags
+
+http://www.php.net/strip_tags
+
+
+=cut
+
+sub strip_tags {
+    death(<<'EODEATH');
+
+=pod
+
+B<PHP::Strings::strip_tags WILL NOT BE IMPLEMENTED>.
+
+You really want L<HTML::Scrubber>.
+
+=cut
+
+EODEATH
+}
+
+
+
+BEGIN { push @badeggs, "strip_tags" };
+
+
 # ========================================================================
+
+=head1 FUNCTIONS ACTUALLY IMPLEMENTED
+
+Just in case you missed which functions were actually implemented
+in that huge mass of unimplemented functions, here's the condensed list
+of implemented functions:
+
+=over 4
+
+
+=item *
+
+L<"addcslashes">
+
+=item *
+
+L<"chunk_split">
+
+=item *
+
+L<"count_chars">
+
+=item *
+
+L<"crc32">
+
+=item *
+
+L<"money_format">
+
+=item *
+
+L<"number_format">
+
+=item *
+
+L<"similar_text">
+
+=item *
+
+L<"str_pad">
+
+=item *
+
+L<"str_shuffle">
+
+=item *
+
+L<"str_word_count">
+
+=back
 
 =head1 BAD EGGS
 
@@ -997,18 +1903,7 @@ If you try to actually use said function, a big fat error will result.
 =cut
 
 BEGIN {
-    no strict 'refs';
-    for my $fn ( @badeggs )
-    {
-        $EXPORT_TAGS{$fn} = [ $fn ];
-        *$fn = sub {
-            croak <<"EOF";
-Function `$fn' not implemented.
-
-Consult `perldoc PHP::Strings` for the reason why.
-EOF
-        }
-    }
+    $EXPORT_TAGS{$_} = [ $_ ] for @badeggs;
 }
 
 =begin _private
@@ -1046,6 +1941,10 @@ and I would like to see it complete at some point.
 In particular, the test suite needs a lot of work. (If you
 feel like it. Hint Hint.)
 
+If you want to implement some of the functions that I've
+said will not be implemented, then I'll be happy to
+include them.
+
 =head1 BUGS, REQUESTS, COMMENTS
 
 Log them via the CPAN RT system via the web or email:
@@ -1057,6 +1956,14 @@ Log them via the CPAN RT system via the web or email:
 
 This makes it much easier for me to track things and thus means
 your problem is less likely to be neglected.
+
+=head1 THANKS
+
+Juerd Waalboer (JUERD) for suggesting a link, and the assorted regex
+functions.
+
+Matthew Persico (PERSICOM) for the idea of having the
+functions give their documentation as their error.
 
 =head1 LICENCE AND COPYRIGHT
 

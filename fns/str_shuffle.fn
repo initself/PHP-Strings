@@ -1,0 +1,12 @@
+docs: |
+    Implemented, against my better judgement. It's trivial, like so many of
+    the others.
+
+code: |
+    sub str_shuffle
+    {
+        my ( $string ) = validate_pos( @_, STRING );
+
+        return join '', shuffle split //, $string;
+    }
+

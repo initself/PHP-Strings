@@ -1,6 +1,16 @@
 
-version: 0.01
-date:    14 Nov 2003
+---
+version: 0.25
+date:    06 Dec 2003
+changes:
+    - Errors now more informative.
+    - No new function implementations.
+    - Cites assorted websites.
+    - Main .pm file now generated from collection of description files.
+
+---
+version: 0.24
+date:    01 Dec 2003
 changes:
     - Initial version.
 

@@ -7,5 +7,5 @@ BEGIN { use_ok 'PHP::Strings', ':bin2hex' };
 # Good inputs
 {
     eval { bin2hex(q{'x'} ) };
-    like( $@, qr/Function `bin2hex' not implemented/, "Not implemented." );
+    like( $@, qr/PHP::Strings::bin2hex will not be implemented/i, "Not implemented." );
 }

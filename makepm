@@ -1,0 +1,45 @@
+#!/usr/bin/perl
+use strict;
+use warnings FATAL => 'all';
+use YAML qw( LoadFile Dump );
+use Template;
+use B::Keywords;
+
+sub load_fns
+{
+    my @fns = <fns/*.fn>;
+    my %fns;
+    for my $file (@fns) {
+        warn "$file...\n";
+        my $data = LoadFile( $file );
+        $data->{name} ||= do {
+            $file =~ m[/([^.]+)] and $1;
+        };
+        die "$data->{name} has no docs!" unless length $data->{docs};
+        $fns{$data->{name}} = $data;
+    }
+
+    return \%fns;
+}
+
+sub inject
+{
+    my ($in, $out, $data) = @_;
+    my %perl = map { ($_,1) } @B::Keywords::Functions;
+
+    my @synopses = grep defined, map { $_->{synopsis} } values %$data;
+    for ( values %$data ) {
+        $_->{exports} ||= [ $_->{name} ];
+        delete $_->{exports} if exists $perl{$_->{name}};
+        $_->{badegg} = !$_->{code} && $_->{exports};
+    }
+
+    my $tt = Template->new() or die $Template::ERROR;
+    $tt->process( $in, {
+            synopses => \@synopses,
+            fns => $data,
+        }, $out ) or die $tt->error();
+}
+
+my $fns = load_fns();
+inject( 'Strings.tt', 'lib/PHP/Strings.pm', $fns );

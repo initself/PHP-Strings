@@ -7,5 +7,5 @@ BEGIN { use_ok 'PHP::Strings', ':addslashes' };
 # Good inputs
 {
     eval { addslashes(q{'x'} ) };
-    like( $@, qr/Function `addslashes' not implemented/, "Not implemented." );
+    like( $@, qr/PHP::Strings::addslashes will not be implemented/i, "Not implemented." );
 }
