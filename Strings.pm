@@ -3,7 +3,7 @@ package PHP::Strings;
 # vim: ft=perl
 use strict;
 use warnings FATAL => 'all';
-our $VERSION = '0.27';
+our $VERSION = '0.28';
 
 =head1 NAME
 
@@ -2974,6 +2974,8 @@ your problem is less likely to be neglected.
 
 =head1 THANKS
 
+Andy Lester (PETDANCE) for taking care of Iain's modules.
+
 Juerd Waalboer (JUERD) for suggesting a link, and the assorted regex
 functions.
 
@@ -2981,6 +2983,9 @@ Matthew Persico (PERSICOM) for the idea of having the
 functions give their documentation as their error.
 
 =head1 LICENCE AND COPYRIGHT
+
+PHP::Strings modifications from version 0.27 are copyright 
+E<copy> Petras Kudaras. All rights reserved.
 
 PHP::Strings is copyright E<copy> Iain Truskett, 2003. All rights
 reserved.
@@ -2993,9 +2998,10 @@ The full text of the licences can be found in the F<Artistic> and
 F<COPYING> files included with this module, or in L<perlartistic> and
 L<perlgpl> as supplied with Perl 5.8.1 and later.
 
-=head1 AUTHOR
+=head1 AUTHORS
 
 Iain Truskett <spoon@cpan.org>
+Petras Kudaras <kudarasp@cpan.org>
 
 =head1 SEE ALSO
 

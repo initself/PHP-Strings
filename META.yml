@@ -1,7 +1,7 @@
 name: PHP-Strings
-version: 0.27
+version: 0.28
 abstract: Implement some of PHP's functions
-author: Iain Truskett (spoon@cpan.org)
+author: Petras Kudaras (kudarasp@cpan.org)
 license: unknown
 distribution_type: module
 requires:

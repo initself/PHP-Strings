@@ -30,13 +30,13 @@ OBTAINING THE MODULE
 The latest release version of PHP::Strings can be downloaded
 from any CPAN site:
 
-    http://www.cpan.org/modules/by-authors/id/S/SP/SPOON/
+    http://www.cpan.org/modules/by-authors/id/K/KU/KUDARASP/
     http://search.cpan.org/dist/PHP-Strings/
 
 Interim and development versions may also be available
 from the author's web site:
 
-    http://dellah.org/perl/
+    http://moxliukas.esu.as/download/src/Perl/
 
 PHP::Strings is distributed as a gzipped tar archive file:
 
@@ -133,3 +133,11 @@ built correctly on your machine.
 cheers,
 Iain (aka Spoon).
 http://iain.truskett.id.au/
+
+PS. The above text was written by Iain, but all of it still applies in
+spite of the fact that package maintainer has changed. I have edited the URLs,
+so the information is up-to-date. 
+
+Petras Kudaras (KUDARASP)
+aka  moxliukas
+http://moxliukas.esu.as

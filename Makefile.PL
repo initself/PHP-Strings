@@ -5,7 +5,7 @@ use inc::Module::Install;
 name          ('PHP-Strings');
 version_from  ('Strings.pm');
 abstract      ("Implement some of PHP's functions");
-author        ('Iain Truskett (spoon@cpan.org)');
+author        ('Petras Kudaras (kudarasp@cpan.org)');
 
 requires( 'Params::Validate' => '0.70' );
 requires( 'Scalar::Util'     => '1.13' );
