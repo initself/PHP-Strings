@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 use strict;
 use warnings FATAL => 'all';
-use Test::More tests => 12;
+use Test::More tests => 13;
 BEGIN { use_ok 'PHP::Strings', ':money_format' };
 use POSIX qw( locale_h );
 
@@ -11,7 +11,7 @@ use POSIX qw( locale_h );
     my $amount = 1234.56;
 
     setlocale( LC_MONETARY, 'en_US' );
-    is( money_format( '%i', $amount ) => "USD 1,234.56", "Basic" );
+    is( money_format( '%i', $amount ) => "USD 1,234.56", "USD Basic" );
 
     setlocale(LC_MONETARY, 'it_IT');
     is( money_format('%.2n', $amount ) => "EUR 1.234,56",
@@ -26,15 +26,42 @@ use POSIX qw( locale_h );
     is( money_format('%=*(#10.2n', $amount ) => '($********1,234.57)',
         "As above, more precision, different fill" );
 
+=begin de_DE 
+<?php
+setlocale(LC_MONETARY, 'de_DE');
+echo money_format('%=*^-14#8.2i', 1234.56);
+?>
+ ****1234,56 EUR
+=cut
+
     setlocale(LC_MONETARY, 'de_DE');
-    is( money_format('%=*^-14#8.2i', 1234.56) => ' 1234,56**** EUR',
+    is( money_format('%=*^-14#8.2i', 1234.56) => ' ****1234,56 EUR',
         "German, width, left and right precision, no grouping" );
 
-    # Let's add some blurb before and after the conversion specification
+
+=begin en_GB
+<?php
+setlocale(LC_MONETARY, 'en_GB');
+echo money_format('%i', -1234.56720);
+?>
+-GBP1,234.57
+=cut 
+
     setlocale(LC_MONETARY, 'en_GB');
+    is( money_format( '%i', $amount ) => "-GBP1,234.57", "GBP Basic" );
+
+=begin en_GB_blurb
+<?php
+setlocale(LC_MONETARY, 'en_GB');
+echo money_format('The final value is %i (after a 10%% discount)', 1234.56);
+?>
+The final value is GBP1,234.56 (after a 10% discount)
+=cut
+
+    # Let's add some blurb before and after the conversion specification
     my $fmt = 'The final value is %i (after a 10%% discount)';
     is( money_format($fmt, 1234.56) =>
-        'The final value is GBP 1,234.56 (after a 10% discount)',
+        'The final value is GBP1,234.56 (after a 10% discount)',
         "Length formatting"
     );
 
